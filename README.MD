@@ -1,1 +1,1 @@
-See https://ezpztxt.ryanb.cc
+See https://welp.ryanb.cc
