@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WELP_Installer", "WELP_Installer\WELP_Installer.vdproj", "{23FD2589-28C8-4F8F-9976-BDF3161233D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23FD2589-28C8-4F8F-9976-BDF3161233D2}.Debug|Default.ActiveCfg = Debug
+		{23FD2589-28C8-4F8F-9976-BDF3161233D2}.Debug|Default.Build.0 = Debug
+		{23FD2589-28C8-4F8F-9976-BDF3161233D2}.Release|Default.ActiveCfg = Release
+		{23FD2589-28C8-4F8F-9976-BDF3161233D2}.Release|Default.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
