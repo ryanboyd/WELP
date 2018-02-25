@@ -215,7 +215,10 @@ namespace WELP
         private void GeneratePreviewButton_Click(object sender, EventArgs e)
         {
 
-            
+            FirstColumnComboBox.Items.Clear();
+            LastColumnComboBox.Items.Clear();
+            TokenColumnComboBox.Items.Clear();
+
             FilenameDisplayBox.Text = "No file selected...";
 
             FilenameLabel.Text = "Clearing old preview... (This might take a while for previews with a large number of columns.)";
@@ -552,8 +555,8 @@ namespace WELP
 
 
 
-            //try
-            //{
+            try
+            {
 
                 
 
@@ -561,6 +564,13 @@ namespace WELP
                 using (TextFieldParser parser = new TextFieldParser(InputFile, SelectedEncoding))
                 {
 
+
+                using (StreamWriter outputFile_subvectors = new StreamWriter(new FileStream(Path.Combine(BgData.OutputLocation, "_WELP_Subvectors.txt"),
+                                                                                                        FileMode.Create, FileAccess.Write), SelectedEncoding))
+                {
+
+                
+                
 
                     // set the parser properties
                     parser.TrimWhiteSpace = true; //trim the whitespace to make sure that files/folder names don't end with a space, which will break the program
@@ -649,6 +659,8 @@ namespace WELP
                                         string[] vector = new string[vectorlength];
                                         Array.Copy(fields, BgData.StartingCol, vector, 0, vectorlength);
                                         double[] vector_numeric = Array.ConvertAll(vector, Double.Parse);
+
+                                        outputFile_subvectors.WriteLine(fields[BgData.TokenCol] + "\t" + string.Join("\t", vector));
 
                                         //add values from the new vector
                                         for (int i = 0; i < vectorlength; i++)
@@ -783,17 +795,20 @@ namespace WELP
                         }
                     }
 
-                    //end of "using" textfieldparser
+                //end "using" for retained vector output
+                }
+
+                //end of "using" textfieldparser
                 }
 
             //end of try
-            //}
-            //catch
-            //{
-            //    DialogResult result = MessageBox.Show("An error occurred somewhere while trying to parse your model file.",
-            //                                          "General Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    e.Cancel = true;
-            //}
+            }
+            catch
+            {
+                DialogResult result = MessageBox.Show("An error occurred somewhere while trying to parse your model file.",
+                                                      "General Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;
+            }
 
 
 
