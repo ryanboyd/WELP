@@ -81,6 +81,22 @@ namespace WELP
             }
 
 
+            string tokenstring = TokenTextbox_Rich.Text;
+            tokenstring = tokenstring.Replace("\r\n", "\n").Replace('\r', '\n');
+            tokenstring = tokenstring.Replace("\n", Environment.NewLine);
+            tokenstring = tokenstring.Trim(Environment.NewLine.ToCharArray());
+
+            string triplenewline = Environment.NewLine + Environment.NewLine + Environment.NewLine;
+            string doublenewline = Environment.NewLine + Environment.NewLine;
+
+            while (tokenstring.Contains(triplenewline))
+            {
+                tokenstring = tokenstring.Replace(triplenewline, doublenewline);
+            }
+
+            TokenTextbox_Rich.Text = tokenstring;
+
+
             //make sure the user has entered at least one thing
             if (TokenTextbox_Rich.Lines.Length == 0)
             {
@@ -118,8 +134,56 @@ namespace WELP
                 BgData.StartingCol = FirstColumnComboBox.SelectedIndex;
                 BgData.EndingCol = LastColumnComboBox.SelectedIndex;
 
+                
+
+                //here, we have to go through some steps to get our user-submitted word list into
+                //separate chunks. First, we figure out where empty linebreaks occur
+
+                List<int> split_indices = new List<int>();
+                int lastIndex = 0;
+
+                while ((lastIndex = Array.IndexOf(TokenTextbox_Rich.Lines, "", lastIndex)) != -1)
+                {
+                    split_indices.Add(lastIndex);
+                    lastIndex++;
+                }
+
+
+                //now, we set up an array of lists so that we can assign tokens to each
+                //list
+                List<string>[] token_list_array = new List<string>[split_indices.Count() + 1];
+                for (int i = 0; i <= split_indices.Count(); i++) token_list_array[i] = new List<string>();
+
+                string[] TokenTextbox_As_Array = TokenTextbox_Rich.Lines;
+
+                //now, we do the assigning
+                int split_position = 0;
+                for (int i = 0; i < TokenTextbox_As_Array.Length; i++)
+                {
+                    if (split_position < split_indices.Count() && i >= split_indices[split_position])
+                    {
+                        split_position++;
+                        continue;
+                    }
+                    token_list_array[split_position].Add(TokenTextbox_As_Array[i]);
+                }
+
+
+                BgData.Tokens = new HashSet<string>[token_list_array.Length];
+
+                for (int i = 0; i < token_list_array.Length; i++)
+                {
+                    BgData.Tokens[i] = new HashSet<string>(token_list_array[i].Distinct().Where(x => !string.IsNullOrEmpty(x)).ToArray());
+                }
+
+
                 //we use "distinct" because we can't have dupes in a hashset
-                BgData.Tokens = new HashSet<string>(TokenTextbox_Rich.Lines.Distinct().Where(x => !string.IsNullOrEmpty(x)).ToArray());
+                BgData.Tokens_Altogether = new HashSet<string>(TokenTextbox_Rich.Lines.Distinct().Where(x => !string.IsNullOrEmpty(x)).ToArray());
+
+
+
+
+
 
                 BgData.OmitBelowValue = 1.0 - ((OmissionValueComboBox.SelectedIndex + 1.0) / 10.0);
 
@@ -466,16 +530,32 @@ namespace WELP
             bool UsingQuotes = Convert.ToBoolean(BgData.UsingQuotes);
             
             //initialize what we'll need later
-            int vectorlength = BgData.EndingCol - BgData.StartingCol + 1;
-            double[] averagevector = new double[vectorlength];
+
 
             this.Invoke((MethodInvoker)delegate ()
             {
                 SelectedEncoding = Encoding.GetEncoding(EncodingDropdown.SelectedItem.ToString());
             });
 
-            try
+            ulong Total_Number_of_Tokens = Convert.ToUInt64(BgData.Tokens_Altogether.Count());
+            ulong number_of_word_lists = Convert.ToUInt64(BgData.Tokens.Count());
+
+
+            int vectorlength = BgData.EndingCol - BgData.StartingCol + 1;
+            double[][] averagevector = new double[number_of_word_lists][];
+            for (ulong i = 0; i < number_of_word_lists; i++)
             {
+                averagevector[i] = new double[vectorlength];
+                for (int j = 0; j < vectorlength; j++) averagevector[i][j] = 0;
+            }
+
+
+
+
+            //try
+            //{
+
+                
 
                 // create the parser
                 using (TextFieldParser parser = new TextFieldParser(InputFile, SelectedEncoding))
@@ -491,9 +571,17 @@ namespace WELP
                     //this is used for header handling and reporting
                     bool firstLine = true;
                     ulong LineNumber = 0;
-                    ulong detected_tokens = 0;
+                    ulong detected_tokens_altogether = 0;
+                    
 
-                    HashSet<string> Detected_Token_Hashset = new HashSet<string>();
+                    
+
+
+                    ulong[] detected_tokens_per_wordlist = new ulong[number_of_word_lists];
+                    for (ulong i = 0; i < number_of_word_lists; i++) detected_tokens_per_wordlist[i] = 0;
+
+                    HashSet <string>[] Detected_Token_Hashset = new HashSet<string>[BgData.Tokens.Length];
+                    for (int i = 0; i < BgData.Tokens.Length; i++) Detected_Token_Hashset[i] = new HashSet<string>();
 
                     //report what we're working on
                     FilenameLabel.Invoke((MethodInvoker)delegate
@@ -517,7 +605,7 @@ namespace WELP
                         {
                             FilenameLabel.Invoke((MethodInvoker)delegate
                                 {
-                                    FilenameLabel.Text = "Getting average vector... Currently reading row #" + LineNumber.ToString();
+                                    FilenameLabel.Text = "Getting average vector(s)... Currently reading row #" + LineNumber.ToString();
                                 });
                         }
 
@@ -538,34 +626,53 @@ namespace WELP
 
 
                         //first, we want to know if the row even contains a token in our list:
-                        if (BgData.Tokens.Contains(fields[BgData.TokenCol]))
+                        if (BgData.Tokens_Altogether.Contains(fields[BgData.TokenCol]))
                         {
 
-                            Detected_Token_Hashset.Add(fields[BgData.TokenCol]);
-                            detected_tokens++;
 
-                            try
+                            //if it does, then we go in and figure out which word lists contain the word in
+                            //question, and do the basic "add word vectors" for each word list that contains it
+                            for (ulong wordlist_counter = 0; wordlist_counter < number_of_word_lists; wordlist_counter++)
                             {
 
-                                //copy just the vector into a new array
-                                string[] vector = new string[vectorlength];
-                                Array.Copy(fields, BgData.StartingCol, vector, 0, vectorlength);
-                                double[] vector_numeric = Array.ConvertAll(vector, Double.Parse);
-
-                                //add values from the new vector
-                                for (int i = 0; i < vectorlength; i++)
+                                if (BgData.Tokens[wordlist_counter].Contains(fields[BgData.TokenCol]))
                                 {
-                                    averagevector[i] += vector_numeric[i];
+
+                                    Detected_Token_Hashset[wordlist_counter].Add(fields[BgData.TokenCol]);
+                                    detected_tokens_altogether++;
+                                    detected_tokens_per_wordlist[wordlist_counter]++;
+
+                                    try
+                                    {
+
+                                        //copy just the vector into a new array
+                                        string[] vector = new string[vectorlength];
+                                        Array.Copy(fields, BgData.StartingCol, vector, 0, vectorlength);
+                                        double[] vector_numeric = Array.ConvertAll(vector, Double.Parse);
+
+                                        //add values from the new vector
+                                        for (int i = 0; i < vectorlength; i++)
+                                        {
+                                            averagevector[wordlist_counter][i] += vector_numeric[i];
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        DialogResult result = MessageBox.Show("There was an error reading your vectors." + "\r\n" +
+                                                                              "Are you sure that you selected columns that only contain numbers?",
+                                                                              "Vector parsing error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        e.Cancel = true;
+                                        break;
+                                    }
+
+
                                 }
+
+
                             }
-                            catch
-                            {
-                                DialogResult result = MessageBox.Show("There was an error reading your vectors." + "\r\n" +
-                                                                      "Are you sure that you selected columns that only contain numbers?",
-                                                                      "Vector parsing error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                e.Cancel = true;
-                                break;
-                            }
+
+
+                            
 
 
 
@@ -575,7 +682,7 @@ namespace WELP
 
 
                         //if we've found all of the tokens, we don't need to keep looking
-                        if(detected_tokens == Convert.ToUInt64(BgData.Tokens.Count())) break;
+                        if(detected_tokens_altogether == Total_Number_of_Tokens) break;
                         
 
                         if (e.Cancel)
@@ -590,7 +697,7 @@ namespace WELP
 
 
                     //let user know if there was an issue with finding tokens
-                    if (detected_tokens == 0)
+                    if (detected_tokens_altogether == 0)
                     {
                         MessageBox.Show("None of the tokens in your list were found.",
                                                               "No Tokens Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -603,20 +710,46 @@ namespace WELP
                     if (!e.Cancel)
                     {
 
-                        //calculate the average vector
-                        //add values from the new vector
-                        for (int i = 0; i < vectorlength; i++)
+
+                        //probably write a file of tokens that *were* captured
+                        StringBuilder tokens_found_output = new StringBuilder();
+
+                        
+
+                        for (ulong wordlist_counter = 0; wordlist_counter < number_of_word_lists; wordlist_counter++)
                         {
-                            averagevector[i] = averagevector[i] / detected_tokens;
+
+                            //calculate the average vector
+                            //add values from the new vector
+                            for (int i = 0; i < vectorlength; i++)
+                            {
+                                averagevector[wordlist_counter][i] = averagevector[wordlist_counter][i] / detected_tokens_per_wordlist[wordlist_counter];
+                            }
+
+                            string[] tokens_as_array = BgData.Tokens[wordlist_counter].ToArray();
+                            List<string> UndetectedTokens = new List<string>();
+                            //figure out which words were not caught
+                            for (int i = 0; i < tokens_as_array.Length; i++)
+                            {
+                                if (!Detected_Token_Hashset[wordlist_counter].Contains(tokens_as_array[i])) UndetectedTokens.Add(tokens_as_array[i]);
+                            }
+
+                            tokens_found_output.Append("\r\n------------------------------------------------\r\n" + 
+                                                   "TOKENS FOUND, WORD GROUP #" + (wordlist_counter + 1).ToString() + ":" + 
+                                                   "\r\n------------------------------------------------\r\n" + 
+                                                   string.Join("\r\n", Detected_Token_Hashset[wordlist_counter]));
+
+                            tokens_found_output.Append("\r\n\r\n\r\n" + 
+                                                   "\r\n------------------------------------------------\r\n" +
+                                                   "TOKENS NOT FOUND, WORD GROUP #" + (wordlist_counter + 1).ToString() + ":" +
+                                                   "\r\n------------------------------------------------\r\n" + 
+                                                   string.Join("\r\n", UndetectedTokens) +
+                                                   "\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+
+
                         }
 
-                        string[] tokens_as_array = BgData.Tokens.ToArray();
-                        List<string> UndetectedTokens = new List<string>();
-                        //figure out which words were not caught
-                        for(int i = 0; i < tokens_as_array.Length; i++)
-                        {
-                            if (!Detected_Token_Hashset.Contains(tokens_as_array[i])) UndetectedTokens.Add(tokens_as_array[i]);
-                        }
+                        
 
 
                         try
@@ -625,13 +758,12 @@ namespace WELP
                             using (StreamWriter outputFile = new StreamWriter(new FileStream(Path.Combine(BgData.OutputLocation, "_WELP_AvgVector.txt"),
                                                                                                             FileMode.Create, FileAccess.Write), SelectedEncoding))
                             {
-                                outputFile.Write(string.Join("\t", averagevector));
+                                for (ulong wordlist_counter = 0; wordlist_counter < number_of_word_lists; wordlist_counter++) outputFile.WriteLine("Word_Group_" + (wordlist_counter + 1).ToString() + "\t" + 
+                                                                                                                                                string.Join("\t", averagevector[wordlist_counter]));
                             }
 
                             
-                            //probably write a file of tokens that *were* captured
-                            string tokens_found_output = "TOKENS FOUND:\r\n-------------\r\n" + string.Join("\r\n", Detected_Token_Hashset);
-                            tokens_found_output += "\r\n\r\n\r\nTOKENS NOT FOUND:\r\n-----------------\r\n" + string.Join("\r\n", UndetectedTokens);
+                            
 
                             using (StreamWriter outputFile = new StreamWriter(new FileStream(Path.Combine(BgData.OutputLocation, "_WELP_TokensFound.txt"),
                                                                                                             FileMode.Create, FileAccess.Write), SelectedEncoding))
@@ -655,14 +787,13 @@ namespace WELP
                 }
 
             //end of try
-            }
-            catch
-            {
-                DialogResult result = MessageBox.Show("An error occurred somewhere while trying to parse your model file.",
-                                                      "General Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true;
-
-            }
+            //}
+            //catch
+            //{
+            //    DialogResult result = MessageBox.Show("An error occurred somewhere while trying to parse your model file.",
+            //                                          "General Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    e.Cancel = true;
+            //}
 
 
 
@@ -702,8 +833,11 @@ namespace WELP
                         {
 
 
+                            //write the header row
+                            string header = "\"Token\"";
+                            for (ulong i = 0; i < number_of_word_lists; i++) header += ",\"Grp_" + (i + 1).ToString() + "_CosineSim\"";
+                            outputFile.WriteLine(header);
 
-                            outputFile.WriteLine("\"Token\",\"CosineSim\"");
 
                             while (!parser.EndOfData && !BgWorker.CancellationPending)
                             {
@@ -754,30 +888,67 @@ namespace WELP
                                     //||d2|| = square root(d2[0]2 + d2[1]2 + ... + d2[n]2)
 
 
-                                    double dotproduct = 0;
-                                    double d1 = 0;
-                                    double d2 = 0;
 
-                                    //calculate cosine similarity components
-                                    for (int i = 0; i < vectorlength; i++)
+                                    bool at_least_one_cossim = false;
+                                    double[] CosineSims = new double[number_of_word_lists];
+                                    
+
+                                    for (ulong wordlist_counter = 0; wordlist_counter < number_of_word_lists; wordlist_counter++)
                                     {
-                                        dotproduct += averagevector[i] * vector_numeric[i];
-                                        d1 += averagevector[i] * averagevector[i];
-                                        d2 += vector_numeric[i] * vector_numeric[i];
+
+
+                                        double dotproduct = 0;
+                                        double d1 = 0;
+                                        double d2 = 0;
+
+                                        //calculate cosine similarity components
+                                        for (int i = 0; i < vectorlength; i++)
+                                        {
+                                            dotproduct += averagevector[wordlist_counter][i] * vector_numeric[i];
+                                            d1 += averagevector[wordlist_counter][i] * averagevector[wordlist_counter][i];
+                                            d2 += vector_numeric[i] * vector_numeric[i];
+                                        }
+
+                                        CosineSims[wordlist_counter] = dotproduct / (Math.Sqrt(d1) * Math.Sqrt(d2));
+
+                                        if (Math.Abs(CosineSims[wordlist_counter]) > BgData.OmitBelowValue) at_least_one_cossim = true;
+
+
                                     }
 
-                                    double CosineSim = dotproduct / (Math.Sqrt(d1) * Math.Sqrt(d2));
 
-                                    if (BgData.OmitBelowValue == 0.0 || Math.Abs(CosineSim) > BgData.OmitBelowValue) { 
+
+                                    if (BgData.OmitBelowValue == 0.0 || at_least_one_cossim)
+                                    {
+
+                                        StringBuilder LineToWrite = new StringBuilder();
 
                                         //write the output, making sure to escape quotes
-                                        if (fields[BgData.TokenCol].Contains('"')) { 
-                                            outputFile.WriteLine("\"" + fields[BgData.TokenCol].Replace("\"", "\"\"") + "\"," + CosineSim.ToString());
+                                        if (fields[BgData.TokenCol].Contains('"'))
+                                        {
+                                            LineToWrite.Append("\"" + fields[BgData.TokenCol].Replace("\"", "\"\"") + "\"");
                                         }
                                         else
                                         {
-                                            outputFile.WriteLine("\"" + fields[BgData.TokenCol] + "\"," + CosineSim.ToString());
+                                            LineToWrite.Append("\"" + fields[BgData.TokenCol] + "\"");
                                         }
+
+
+
+
+                                        for (ulong wordlist_counter = 0; wordlist_counter < number_of_word_lists; wordlist_counter++)
+                                        {
+                                            if (BgData.OmitBelowValue == 0.0 || Math.Abs(CosineSims[wordlist_counter]) > BgData.OmitBelowValue)
+                                            {
+                                                LineToWrite.Append("," + CosineSims[wordlist_counter]);
+                                            }
+                                            else
+                                            {
+                                                LineToWrite.Append(",");
+                                            }
+                                        }
+
+                                        outputFile.WriteLine(LineToWrite);
 
                                     }
 
@@ -918,7 +1089,8 @@ namespace WELP
             public int StartingCol { get; set; }
             public int EndingCol { get; set; }
             public int TokenCol { get; set; }
-            public HashSet<string> Tokens { get; set; }
+            public HashSet<string>[] Tokens { get; set; }
+            public HashSet<string> Tokens_Altogether { get; set; }
 
             public double OmitBelowValue { get; set; }
 
@@ -936,6 +1108,26 @@ namespace WELP
             }
                  
         }
+
+        //https://stackoverflow.com/a/1739058
+        static object InitializeJaggedArray(Type type, ulong index, int[] lengths)
+        {
+            Array array = Array.CreateInstance(type, lengths[index]);
+            Type elementType = type.GetElementType();
+
+            if (elementType != null)
+            {
+                for (int i = 0; i < lengths[index]; i++)
+                {
+                    array.SetValue(
+                        InitializeJaggedArray(elementType, index + 1, lengths), i);
+                }
+            }
+
+            return array;
+        }
+
+
     }
 
 

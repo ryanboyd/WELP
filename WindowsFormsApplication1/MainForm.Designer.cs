@@ -337,6 +337,7 @@
             // 
             // TokenTextbox_Rich
             // 
+            this.TokenTextbox_Rich.AcceptsTab = true;
             this.TokenTextbox_Rich.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.TokenTextbox_Rich.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TokenTextbox_Rich.ForeColor = System.Drawing.Color.Black;

@@ -49,6 +49,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -212,15 +220,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WELP"
-        "ProductCode" = "8:{8B18EFD5-506B-4652-9F20-91B7B78438E3}"
-        "PackageCode" = "8:{AA1362CD-E02F-4A8B-BCEE-079F11BC38ED}"
+        "ProductCode" = "8:{05097DF0-9FCA-43AA-B21D-6AD906A5B3F9}"
+        "PackageCode" = "8:{3F4F7512-2380-49B4-80D0-EC735A75B5B2}"
         "UpgradeCode" = "8:{29A51B3A-5591-401F-80D4-E29CE9731F00}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.95"
+        "ProductVersion" = "8:1.01"
         "Manufacturer" = "8:Ryan L. Boyd, Ph.D."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://ryanb.cc"
