@@ -44,7 +44,7 @@ namespace WELP
             }
 
 
-            TokenTextbox_Rich.Text = "happy\r\nwonderful\r\nterrific";
+            TokenTextbox.Text = "happy\r\nwonderful\r\nterrific";
 
             OmissionValueComboBox.SelectedIndex = 2;
 
@@ -81,7 +81,7 @@ namespace WELP
             }
 
 
-            string tokenstring = TokenTextbox_Rich.Text;
+            string tokenstring = TokenTextbox.Text;
             tokenstring = tokenstring.Replace("\r\n", "\n").Replace('\r', '\n');
             tokenstring = tokenstring.Replace("\n", Environment.NewLine);
             tokenstring = tokenstring.Trim(Environment.NewLine.ToCharArray());
@@ -94,11 +94,11 @@ namespace WELP
                 tokenstring = tokenstring.Replace(triplenewline, doublenewline);
             }
 
-            TokenTextbox_Rich.Text = tokenstring;
+            TokenTextbox.Text = tokenstring;
 
 
             //make sure the user has entered at least one thing
-            if (TokenTextbox_Rich.Lines.Length == 0)
+            if (TokenTextbox.Lines.Length == 0)
             {
                 MessageBox.Show("You must enter at least one token.", "No Tokens Entered", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -142,7 +142,7 @@ namespace WELP
                 List<int> split_indices = new List<int>();
                 int lastIndex = 0;
 
-                while ((lastIndex = Array.IndexOf(TokenTextbox_Rich.Lines, "", lastIndex)) != -1)
+                while ((lastIndex = Array.IndexOf(TokenTextbox.Lines, "", lastIndex)) != -1)
                 {
                     split_indices.Add(lastIndex);
                     lastIndex++;
@@ -154,7 +154,7 @@ namespace WELP
                 List<string>[] token_list_array = new List<string>[split_indices.Count() + 1];
                 for (int i = 0; i <= split_indices.Count(); i++) token_list_array[i] = new List<string>();
 
-                string[] TokenTextbox_As_Array = TokenTextbox_Rich.Lines;
+                string[] TokenTextbox_As_Array = TokenTextbox.Lines;
 
                 //now, we do the assigning
                 int split_position = 0;
@@ -178,7 +178,7 @@ namespace WELP
 
 
                 //we use "distinct" because we can't have dupes in a hashset
-                BgData.Tokens_Altogether = new HashSet<string>(TokenTextbox_Rich.Lines.Distinct().Where(x => !string.IsNullOrEmpty(x)).ToArray());
+                BgData.Tokens_Altogether = new HashSet<string>(TokenTextbox.Lines.Distinct().Where(x => !string.IsNullOrEmpty(x)).ToArray());
 
 
 
@@ -1059,7 +1059,7 @@ namespace WELP
             HeaderRowDropdown.Enabled = false;
             EncodingDropdown.Enabled = false;
 
-            TokenTextbox_Rich.Enabled = false;
+            TokenTextbox.Enabled = false;
 
             TokenColumnComboBox.Enabled = false;
             FirstColumnComboBox.Enabled = false;
@@ -1080,7 +1080,7 @@ namespace WELP
             HeaderRowDropdown.Enabled = true;
             EncodingDropdown.Enabled = true;
 
-            TokenTextbox_Rich.Enabled = true;
+            TokenTextbox.Enabled = true;
 
             TokenColumnComboBox.Enabled = true;
             FirstColumnComboBox.Enabled = true;

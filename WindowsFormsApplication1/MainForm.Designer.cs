@@ -53,7 +53,6 @@
             this.LastColumnComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.TokenTextbox_Rich = new System.Windows.Forms.RichTextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.label9 = new System.Windows.Forms.Label();
@@ -61,6 +60,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.OmissionValueComboBox = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.TokenTextbox = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -335,19 +335,6 @@
             this.label7.Text = "Vector End";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // TokenTextbox_Rich
-            // 
-            this.TokenTextbox_Rich.AcceptsTab = true;
-            this.TokenTextbox_Rich.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.TokenTextbox_Rich.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TokenTextbox_Rich.ForeColor = System.Drawing.Color.Black;
-            this.TokenTextbox_Rich.Location = new System.Drawing.Point(545, 42);
-            this.TokenTextbox_Rich.Name = "TokenTextbox_Rich";
-            this.TokenTextbox_Rich.Size = new System.Drawing.Size(223, 246);
-            this.TokenTextbox_Rich.TabIndex = 21;
-            this.TokenTextbox_Rich.Text = "";
-            this.TokenTextbox_Rich.WordWrap = false;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -428,6 +415,22 @@
             this.panel1.Size = new System.Drawing.Size(756, 49);
             this.panel1.TabIndex = 27;
             // 
+            // TokenTextbox
+            // 
+            this.TokenTextbox.AcceptsReturn = true;
+            this.TokenTextbox.AcceptsTab = true;
+            this.TokenTextbox.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.TokenTextbox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TokenTextbox.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TokenTextbox.Location = new System.Drawing.Point(545, 42);
+            this.TokenTextbox.MaxLength = 2147483647;
+            this.TokenTextbox.Multiline = true;
+            this.TokenTextbox.Name = "TokenTextbox";
+            this.TokenTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TokenTextbox.Size = new System.Drawing.Size(223, 246);
+            this.TokenTextbox.TabIndex = 28;
+            this.TokenTextbox.WordWrap = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -437,7 +440,6 @@
             this.Controls.Add(this.label9);
             this.Controls.Add(this.TokenColumnComboBox);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.TokenTextbox_Rich);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LastColumnComboBox);
@@ -451,6 +453,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.TokenTextbox);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -495,7 +498,6 @@
         private System.Windows.Forms.ComboBox LastColumnComboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.RichTextBox TokenTextbox_Rich;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label label9;
@@ -503,6 +505,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox OmissionValueComboBox;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox TokenTextbox;
     }
 }
 
