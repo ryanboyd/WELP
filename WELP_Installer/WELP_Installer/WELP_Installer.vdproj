@@ -56,6 +56,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
         "Release"
@@ -82,6 +90,11 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.2"
+                    }
                 }
             }
         }
@@ -105,9 +118,9 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.5"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.6.2"
                 "AllowLaterVersions" = "11:FALSE"
-                "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=395269"
+                "InstallUrl" = "8:https://www.microsoft.com/en-us/download/details.aspx?id=53344"
                 }
             }
         }
@@ -220,15 +233,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WELP"
-        "ProductCode" = "8:{05097DF0-9FCA-43AA-B21D-6AD906A5B3F9}"
-        "PackageCode" = "8:{3F4F7512-2380-49B4-80D0-EC735A75B5B2}"
+        "ProductCode" = "8:{BEACDA3B-A6EC-4393-AEBC-9C32740B1F53}"
+        "PackageCode" = "8:{4AE40D2F-950B-4A0A-A16B-7B323E61AC32}"
         "UpgradeCode" = "8:{29A51B3A-5591-401F-80D4-E29CE9731F00}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.01"
+        "ProductVersion" = "8:1.02"
         "Manufacturer" = "8:Ryan L. Boyd, Ph.D."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://ryanb.cc"

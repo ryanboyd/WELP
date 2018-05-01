@@ -89,7 +89,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(154, 24);
             this.label3.TabIndex = 3;
-            this.label3.Text = "WELP (v1.01)";
+            this.label3.Text = "WELP (v1.02)";
             this.label3.UseWaitCursor = true;
             // 
             // Splash

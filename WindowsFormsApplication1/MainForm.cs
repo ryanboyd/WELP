@@ -191,6 +191,25 @@ namespace WELP
 
                 StartButton.Text = "Cancel";
 
+                try
+                {
+                    using (StreamWriter outputFile = new StreamWriter(new FileStream(Path.Combine(BgData.OutputLocation, "_WELP_SeedList.txt"),
+                                                                                                        FileMode.Create, FileAccess.Write), Encoding.GetEncoding(EncodingDropdown.SelectedItem.ToString())))
+                    {
+                        outputFile.Write(TokenTextbox.Text);
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("There was an error writing your seed list to the" + "\r\n" +
+                                "output directory. Please check all of your settings" + "\r\n" +
+                               "and folders before starting again.", "Output Write Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Enabled = true;
+                    StartButton.Text = "Start!";
+                    EnableButtons();
+                    return;
+                }
+
                 BgWorker.RunWorkerAsync(BgData);
 
             }
@@ -1106,6 +1125,7 @@ namespace WELP
             public int TokenCol { get; set; }
             public HashSet<string>[] Tokens { get; set; }
             public HashSet<string> Tokens_Altogether { get; set; }
+
 
             public double OmitBelowValue { get; set; }
 
