@@ -658,17 +658,19 @@ namespace WELP
                         if (BgData.Tokens_Altogether.Contains(fields[BgData.TokenCol]))
                         {
 
-
+                            detected_tokens_altogether++;
                             //if it does, then we go in and figure out which word lists contain the word in
                             //question, and do the basic "add word vectors" for each word list that contains it
                             for (ulong wordlist_counter = 0; wordlist_counter < number_of_word_lists; wordlist_counter++)
                             {
 
+                                
+
                                 if (BgData.Tokens[wordlist_counter].Contains(fields[BgData.TokenCol]))
                                 {
 
                                     Detected_Token_Hashset[wordlist_counter].Add(fields[BgData.TokenCol]);
-                                    detected_tokens_altogether++;
+                                    
                                     detected_tokens_per_wordlist[wordlist_counter]++;
 
                                     try

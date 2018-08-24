@@ -21,14 +21,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1FD81ED919E148A4B537FCA364201998"
+        "MsmKey" = "8:_CC8FF6CC8BA843DE95471C8DB4EE1B6F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1FD81ED919E148A4B537FCA364201998"
+        "OwnerKey" = "8:_CC8FF6CC8BA843DE95471C8DB4EE1B6F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -146,14 +146,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1FD81ED919E148A4B537FCA364201998"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CC8FF6CC8BA843DE95471C8DB4EE1B6F"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:WELP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1FD81ED919E148A4B537FCA364201998"
+                    "_CC8FF6CC8BA843DE95471C8DB4EE1B6F"
                     {
                     "Name" = "8:WELP.exe"
                     "Attributes" = "3:512"
@@ -233,15 +233,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WELP"
-        "ProductCode" = "8:{BEACDA3B-A6EC-4393-AEBC-9C32740B1F53}"
-        "PackageCode" = "8:{4AE40D2F-950B-4A0A-A16B-7B323E61AC32}"
+        "ProductCode" = "8:{9952B74B-F187-466B-8C29-462ED0DD3345}"
+        "PackageCode" = "8:{53E96FC7-F0D2-4C5E-AF1A-9DCEFADA6506}"
         "UpgradeCode" = "8:{29A51B3A-5591-401F-80D4-E29CE9731F00}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.02"
+        "ProductVersion" = "8:1.04"
         "Manufacturer" = "8:Ryan L. Boyd, Ph.D."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://ryanb.cc"
@@ -354,7 +354,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_5D849339BE57408D9607D263325B0C39"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_61449B53C7BC47CEA436C9121188E98A"
             {
             "Name" = "8:WELP"
             "Arguments" = "8:"
@@ -362,13 +362,13 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_1FD81ED919E148A4B537FCA364201998"
-            "Folder" = "8:_7402E594C55F4DE5B8B7C227D8589000"
-            "WorkingFolder" = "8:_D4202308D182418FA006E7A768105D31"
+            "Target" = "8:_CC8FF6CC8BA843DE95471C8DB4EE1B6F"
+            "Folder" = "8:_D4202308D182418FA006E7A768105D31"
+            "WorkingFolder" = "8:_B7493D29E7B848688987EC9AB30693AA"
             "Icon" = "8:_0D70E6EEC96848FCA14CFF71E2150961"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_DF22BB9755374A75B368B3F73D5C22BE"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6FACD6F28FC0487485E39EAACF73B9CF"
             {
             "Name" = "8:WELP"
             "Arguments" = "8:"
@@ -376,8 +376,8 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_1FD81ED919E148A4B537FCA364201998"
-            "Folder" = "8:_D4202308D182418FA006E7A768105D31"
+            "Target" = "8:_CC8FF6CC8BA843DE95471C8DB4EE1B6F"
+            "Folder" = "8:_7402E594C55F4DE5B8B7C227D8589000"
             "WorkingFolder" = "8:_B7493D29E7B848688987EC9AB30693AA"
             "Icon" = "8:_0D70E6EEC96848FCA14CFF71E2150961"
             "Feature" = "8:"
